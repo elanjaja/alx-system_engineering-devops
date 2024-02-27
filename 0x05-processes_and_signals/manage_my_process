@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# Bash script that:
-#+ Indefinitely writes I am alive! to the file /tmp/my_process
+# Indefinitely writes "I am alive" to the file /tmp/my_process
+#   Pauses two seconds in between each message
 
-i=0
-while (true);
+while true
 do
-	echo "I am alive!" >> /tmp/my_process
-	((i++))
-	sleep 2
+    sudo bash -c 'echo "I am alive!" >> /tmp/my_process'
+    sleep 2
 done
