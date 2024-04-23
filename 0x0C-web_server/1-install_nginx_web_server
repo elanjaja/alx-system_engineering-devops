@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
-# This script configures Nginx on a server
-# Configs: listen on port 80 & return 'Hello World!' at /
-apt-get update -y; apt-get install nginx -y; echo 'Hello World!' > /var/www/html/index.nginx-debian.html; service nginx restart
+# Installs nginx web server on a new ubuntu server
+
+sudo apt update
+sudo apt install -y nginx
+sudo ufw allow 'Nginx HTTP'
+# echo "Hello World!" | sudo tee /var/www/html/index.html
+# OR
+echo "Hello World!" | tee /var/www/html/index.nginx-debian.html
+sudo service nginx restart
