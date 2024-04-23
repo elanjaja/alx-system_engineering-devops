@@ -1,19 +1,4 @@
 #!/usr/bin/env bash
-# Install nginx web server
-
-# Step 1 – Installing Nginx
-apt update
-apt install nginx -y
-
-# Nginx listening on port 80
-
-sed -i 's/listen [::]:80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
-
-# querying Nginx at its root / with a GET request (requesting a page) using curl
-
-cat <<EOF > /var/www/html/index.html
-Hello World!
-EOF
-
-# Restart nginx
-service nginx restart
+# This script configures Nginx on a server
+# Configs: listen on port 80 & return 'Hello World!' at /
+apt-get update -y; apt-get install nginx -y; echo 'Hello World!' > /var/www/html/index.nginx-debian.html; service nginx restart
