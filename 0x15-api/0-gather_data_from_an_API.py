@@ -1,30 +1,47 @@
 #!/usr/bin/python3
-'''
-gather employee data from API
-'''
-
-import re
-import requests
+"""0-gather_data_from_an_API module"""
+import json
 import sys
+import urllib.request
 
-REST_API = "https://jsonplaceholder.typicode.com"
+
+def get_info(id):
+    """
+    get_info: for a given employee ID, returns information
+    about his/her TODO list progress.
+    Args:
+        id: the user's id
+    """
+
+    # URLs to GET
+    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={id}'
+    user_url = f'https://jsonplaceholder.typicode.com/users/{id}'
+
+    # GET User's name
+    with urllib.request.urlopen(user_url) as user_response:
+        user_data = json.loads(user_response.read().decode('utf-8'))
+        empolyee_name = user_data.get('name')
+
+        # GET todo of the user
+        with urllib.request.urlopen(todo_url) as todo_response:
+            todo_data = json.loads(todo_response.read().decode('utf-8'))
+
+            total_tasks = len(todo_data)
+
+            completed_tasks = []
+
+            for task in todo_data:
+                if task['completed']:
+                    completed_tasks.append(task)
+
+            print(f'Employee {empolyee_name} is done with ', end='')
+            print(f'tasks({len(completed_tasks)}/{total_tasks}):')
+
+            for task in completed_tasks:
+                print(f'\t {task["title"]}')
+
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        if re.fullmatch(r'\d+', sys.argv[1]):
-            id = int(sys.argv[1])
-            req = requests.get('{}/users/{}'.format(REST_API, id)).json()
-            task_req = requests.get('{}/todos'.format(REST_API)).json()
-            emp_name = req.get('name')
-            tasks = list(filter(lambda x: x.get('userId') == id, task_req))
-            completed_tasks = list(filter(lambda x: x.get('completed'), tasks))
-            print(
-                'Employee {} is done with tasks({}/{}):'.format(
-                    emp_name,
-                    len(completed_tasks),
-                    len(tasks)
-                )
-            )
-            if len(completed_tasks) > 0:
-                for task in completed_tasks:
-                    print('\t {}'.format(task.get('title')))
+    if len(sys.argv) == 2:
+        id = sys.argv[1]
+        get_info(id)
