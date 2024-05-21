@@ -2,7 +2,7 @@
 """
 A Script that, uses a REST API, for a given employee ID, returns
 information about his/her TODO list progress
-exporting data in the CSV format.
+exporting data in the CSV format.......
 """
 
 import csv

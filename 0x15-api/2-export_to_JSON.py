@@ -2,7 +2,7 @@
 """
 A sript that, uses a REST API, for a given employee ID, returns
 information about his/her TODO list progress
-and exports data in the JSON format.
+and exports data in the JSON format..........
 """
 
 import json
