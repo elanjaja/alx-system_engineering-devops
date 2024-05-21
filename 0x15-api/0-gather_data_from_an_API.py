@@ -1,47 +1,29 @@
 #!/usr/bin/python3
-"""0-gather_data_from_an_API module"""
-import json
-import sys
-import urllib.request
+"""
+This script displays user's TODO list using {JSON} Placeholder REST API
+"""
 
 
-def get_info(id):
+def main():
     """
-    get_info: for a given employee ID, returns information
-    about his/her TODO list progress.
-    Args:
-        id: the user's id
+    Returns information about TODO list progress of given employee ID
+    using a REST API
     """
+    import requests
+    import sys
 
-    # URLs to GET
-    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={id}'
-    user_url = f'https://jsonplaceholder.typicode.com/users/{id}'
+    user_id = int(sys.argv[1])
+    user = requests.get('https://jsonplaceholder.typicode.com/users/' +
+                        '{}'.format(user_id))
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos' +
+                         '?userId={}'.format(user_id))
 
-    # GET User's name
-    with urllib.request.urlopen(user_url) as user_response:
-        user_data = json.loads(user_response.read().decode('utf-8'))
-        empolyee_name = user_data.get('name')
-
-        # GET todo of the user
-        with urllib.request.urlopen(todo_url) as todo_response:
-            todo_data = json.loads(todo_response.read().decode('utf-8'))
-
-            total_tasks = len(todo_data)
-
-            completed_tasks = []
-
-            for task in todo_data:
-                if task['completed']:
-                    completed_tasks.append(task)
-
-            print(f'Employee {empolyee_name} is done with ', end='')
-            print(f'tasks({len(completed_tasks)}/{total_tasks}):')
-
-            for task in completed_tasks:
-                print(f'\t {task["title"]}')
+    done = [task for task in todos.json() if task.get('completed', False)]
+    print("Employee {} is done with tasks".format(user.json().get('name')) +
+          "({}/{}):".format(len(done), len(todos.json())))
+    for task in done:
+        print("\t {}".format(task.get('title')))
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        id = sys.argv[1]
-        get_info(id)
+    main()
